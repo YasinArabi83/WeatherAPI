@@ -17,6 +17,8 @@ try
 
     var builder = WebApplication.CreateBuilder(args);
 
+    builder.Configuration.AddJsonFile("tokens.json", optional: false, reloadOnChange: true);
+
     builder.Services.AddSerilog((services, lc) =>
     {
         lc
