@@ -2,7 +2,7 @@
 {
     public class AirPollutionModel
     {
-
+        public int Aqi { get; set; }
         public double Co { get; set; }
         public double No { get; set; }
         public double No2 { get; set; }
