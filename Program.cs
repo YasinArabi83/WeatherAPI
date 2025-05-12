@@ -37,7 +37,6 @@ try
     });
 
     builder.Services.AddScoped<IApiFetcher, ApiFetcher>();
-    builder.Services.AddScoped<IOpenWeatherServices, OpenWeatherServices>();
     builder.Services.AddHttpClient<IOpenWeatherServices, OpenWeatherServices>(client =>
     {
 
