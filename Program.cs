@@ -2,6 +2,8 @@
 using Serilog;
 using Serilog.Events;
 using Serilog.Formatting.Compact;
+using WeatherAPI.Interfaces;
+using WeatherAPI.Services;
 
 Log.Logger = new LoggerConfiguration()
     .Enrich.FromLogContext()
@@ -32,6 +34,17 @@ try
             retainedFileCountLimit: 30,
             encoding: System.Text.Encoding.UTF8
     );
+    });
+
+    builder.Services.AddScoped<IApiFetcher, ApiFetcher>();
+    builder.Services.AddScoped<IOpenWeatherServices, OpenWeatherServices>();
+    builder.Services.AddHttpClient<IOpenWeatherServices, OpenWeatherServices>(client =>
+    {
+
+        client.BaseAddress = new Uri(builder.Configuration["OpenWeather:BaseUrl"]
+            ?? throw new NullReferenceException("The 'BaseUrl' configuration value is missing. Please ensure it is defined in the application settings."));
+        client.DefaultRequestHeaders.Add("Accept", "application/json");
+        client.DefaultRequestHeaders.Add("User-Agent", "WeatherAPI");
     });
 
     builder.Services.AddControllers();
