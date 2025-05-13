@@ -1,4 +1,5 @@
 
+using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Events;
 using Serilog.Formatting.Compact;
@@ -50,13 +51,26 @@ try
 
     builder.Services.AddControllers();
 
-    builder.Services.AddOpenApi("v1");
-
+    builder.Services.AddEndpointsApiExplorer(); 
+    builder.Services.AddSwaggerGen(c =>
+    {
+        c.SwaggerDoc("v1", new OpenApiInfo
+        {
+            Title = "Weather API",
+            Version = "v1",
+        });
+    });
     var app = builder.Build();
 
     if (app.Environment.IsDevelopment())
     {
-        app.MapOpenApi();
+        app.UseSwagger();
+        app.UseSwaggerUI(c =>
+        {
+            c.SwaggerEndpoint("/swagger/v1/swagger.json", "Weather API V1");
+            c.DocumentTitle = "Weather API Document";
+            c.RoutePrefix = string.Empty;
+        });
     }
 
     app.UseHttpsRedirection();
