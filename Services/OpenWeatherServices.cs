@@ -92,8 +92,44 @@ public class OpenWeatherServices
         }
     }
 
-    public Task<WeatherModel> GetWeatherInfo(double latitude, double longitude)
+    public async Task<WeatherModel> GetWeatherInfo(double latitude, double longitude)
     {
-        throw new NotImplementedException();
+        string endPoint = "data/2.5/weather";
+        try
+        {
+            var queryParams = new Dictionary<string, string?>
+            {
+                ["lat"] = latitude.ToString(),
+                ["lon"] = longitude.ToString(),
+                ["appid"] = _configuration["Token"] ?? throw new NullReferenceException("API token is missing in the configuration. Please ensure the 'Token' key is set in the tokens.json file."),
+                ["units"] = "metric",
+            };
+
+            var urlWithQuery = QueryHelpers.AddQueryString(endPoint, queryParams);
+
+            _logger.LogInformation("Fetching weather information for {lat} & {lon} from endpoint {urlWithQuery}", latitude, longitude, urlWithQuery);
+
+            var response = await _fetch.GetApis(_client, urlWithQuery);
+
+            var weather = WeatherModel.ParseWeather(response);
+
+            _logger.LogInformation("Successfully retrieved weather information for {lat} & {lon}", latitude, longitude);
+            return weather ?? throw new Exception($"Weather information for {latitude} & {longitude} is not found");
+        }
+        catch (HttpRequestException ex)
+        {
+            _logger.LogError(ex, "HTTP request error while fetching weather information for {lat} & {lon}", latitude, longitude);
+            throw new Exception("An error occurred while making the HTTP request.", ex);
+        }
+        catch (NullReferenceException ex)
+        {
+            _logger.LogError(ex, "Configuration error: {Message}", ex.Message);
+            throw;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An unexpected error occurred while fetching weather information for {lat} & {lon}", latitude, longitude);
+            throw;
+        }
     }
 }
