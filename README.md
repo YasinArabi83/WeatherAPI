@@ -1,7 +1,4 @@
 # WeatherAPI
-
-## Overview# WeatherAPI
-
 ## Overview
 
 WeatherAPI is a RESTful web service built with ASP.NET Core (.NET 9) that provides weather information for various locations. The API is designed for easy integration with client applications and supports modern web development best practices.
@@ -27,12 +24,12 @@ WeatherAPI is a RESTful web service built with ASP.NET Core (.NET 9) that provid
 
 1. Clone the repository:
 2. Restore dependencies:
-   -**Configure tokens.json:**  
+3. **Configure tokens.json:**  
    The application requires a `tokens.json` file in the root directory for API keys and sensitive configuration.  
    sample: `tokens.sample.json`:
-3. Build the project:
-4. Run the API:
-5. The API will be available at `https://localhost:5001` (or the port specified in launch settings).
+4. Build the project:
+5. Run the API:
+6. The API will be available at `https://localhost:5001` (or the port specified in launch settings).
 
 ### API Documentation
 
